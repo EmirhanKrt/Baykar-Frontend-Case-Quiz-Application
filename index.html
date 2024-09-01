@@ -1,16 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" data-theme="light">
   <head>
     <title>Baykar Frontend Case - Quiz Application</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="Baykar Frontend Case - Quiz Application">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="./public/styles/style.css">
   </head>
   <body>
-    <main>
-      <h1>Baykar Frontend Case - Quiz Application</h1>
+    <main class="container">
+      <header>
+        <a href="/" target="_top">
+          <h1>QUIZ APPLICATION</h1>
+        </a>
+      </header>
+
+      <div id="main-screen" class="app-container">
+        <div id="guide-container" class="content-container">
+          <h2><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg> Guide</h2>
+          <ol type="1">
+            <li><span>Start the Quiz: </span>Begin with randomly selected questions from our question bank.</li>
+            <li><span>Answer Questions: </span>Choose the correct multiple-choice option by clicking on it.</li>
+            <li><span>Check Your Score: </span>After submitting all the answers check your final score for further improvisation.</li>
+          </ol>
+        </div>
+
+
+        <div class="start-button-container content-container">
+          <button>Start Quiz <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button>
+        </div>
+      </div>
+
+      <footer>
+        <div id="footer-social-navigation-container">
+          <a target="_blank" href="https://github.com/EmirhanKrt/Baykar-Frontend-Case-Quiz-Application">SOURCE</a>
+        </div>
+        <div id="footer-theme-container">
+          <span id="light-theme-button" class="theme-button" onclick="updateTheme('light')">LIGHT</span>
+          <span>/</span>
+          <span id="dark-theme-button" class="theme-button active" onclick="updateTheme('dark')">DARK</span>
+        </div>
+      </footer>
     </main>
+
+    <script src="./public/scripts/themeHandler.js" defer></script>
   </body>
 </html>
