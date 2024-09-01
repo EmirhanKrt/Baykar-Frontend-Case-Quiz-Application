@@ -1,0 +1,19 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --scroll-shadow-background-size: 640px;
+  --background-color: #f7f7f8;
+}
+
+body {
+  height: 100svh;
+  width: 100vw;
+  background-color: var(--background-color);
+  font-size: 16px;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
