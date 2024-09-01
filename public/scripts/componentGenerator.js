@@ -54,12 +54,6 @@ const QuestionComponentGenerator = ({ question, choices }) => {
           button.classList.remove('selected');
         }
       });
-
-      if (clickedButton.classList.contains('selected')) {
-        clickedButton.classList.remove('selected');
-      } else {
-        clickedButton.classList.add('selected');
-      }
     }
   });
 

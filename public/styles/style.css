@@ -297,9 +297,11 @@ div#main-screen .start-button-container button {
   font-weight: 600;
   font-size: 20px;
   line-height: 28px;
+
+  color: var(--title-color);
 }
 
-.question-choise-container {
+.question-choice-container {
   display: flex;
   flex-direction: column;
 
