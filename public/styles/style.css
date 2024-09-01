@@ -152,7 +152,7 @@ button {
   transition: 0.3s ease-in-out;
 }
 
-button:hover {
+button:not(:disabled):hover {
   opacity: 0.8;
 }
 
@@ -317,18 +317,29 @@ div#main-screen .start-button-container button {
   gap: 0;
   padding: 0;
 
+  border-radius: 0;
+
   border-color: var(--background-color-2);
   background-color: var(--background-color-2);
 
   overflow: hidden;
 }
 
-.choice-button:hover {
+.choice-button:disabled {
+  cursor: not-allowed;
+}
+
+.choice-button:disabled .choice-identifier,
+.choice-button:disabled .choice-text {
+  background-color: var(--background-color-2);
+}
+
+.choice-button:not(:disabled):hover {
   opacity: 1;
 }
 
-.choice-button.selected,
-.choice-button:not(.correct):not(.wrong):hover {
+.choice-button:not(:disabled).selected,
+.choice-button:not(:disabled):not(.correct):not(.wrong):hover {
   border-color: var(--primary-color);
 }
 
@@ -351,8 +362,9 @@ div#main-screen .start-button-container button {
   transition: 0.3s ease-in-out;
 }
 
-.choice-button.selected .choice-identifier,
-.choice-button:not(.correct):not(.wrong):hover .choice-identifier {
+.choice-button:not(:disabled).selected .choice-identifier,
+.choice-button:not(:disabled):not(.correct):not(.wrong):hover
+  .choice-identifier {
   color: var(--primary-color);
   background-color: var(--background-color-5);
 }
@@ -371,28 +383,28 @@ div#main-screen .start-button-container button {
   padding: 1rem;
 }
 
-.choice-button.correct {
+.choice-button:not(:disabled).correct {
   border-color: var(--correct-answer-background-color);
 }
 
-.choice-button.correct .choice-identifier {
+.choice-button:not(:disabled).correct .choice-identifier {
   color: var(--correct-answer-background-color);
 }
 
-.choice-button.correct .choice-text {
+.choice-button:not(:disabled).correct .choice-text {
   background-color: var(--correct-answer-background-color);
   color: var(--button-text-color);
 }
 
-.choice-button.wrong {
+.choice-button:not(:disabled).wrong {
   border-color: var(--wrong-answer-background-color);
 }
 
-.choice-button.wrong .choice-identifier {
+.choice-button:not(:disabled).wrong .choice-identifier {
   color: var(--wrong-answer-background-color);
 }
 
-.choice-button.wrong .choice-text {
+.choice-button:not(:disabled).wrong .choice-text {
   background-color: var(--wrong-answer-background-color);
   color: var(--button-text-color);
 }

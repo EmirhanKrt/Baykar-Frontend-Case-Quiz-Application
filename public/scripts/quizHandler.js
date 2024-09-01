@@ -11,6 +11,18 @@ const MOCK_QUESTION = {
   ]
 };
 
+const enableButtonsAfter10Second = (choiceButtons) => {
+  Array.from(choiceButtons).forEach(
+    (choiceButton) => (choiceButton.disabled = false)
+  );
+
+  return true;
+};
+
+const forceNextQuestionAfter30Second = () => {
+  // todo; call next question function
+};
+
 const startQuiz = async () => {
   // assume that questions received with HTTP request
 

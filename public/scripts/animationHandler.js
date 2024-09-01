@@ -22,7 +22,6 @@ const removePageContentAnimationHandler = () => {
         'animationend',
         () => {
           element.remove();
-          console.log('element removed');
 
           previusElementIndex--;
           removeContent();
@@ -80,9 +79,8 @@ const insertPageContentAnimationHandler = (component) => {
       element.addEventListener(
         'animationend',
         () => {
-          /*           element.style.removeProperty('opacity');
-          element.classList.remove('append-animation'); */
-          console.log('element is now visible');
+          element.style.removeProperty('opacity');
+          element.classList.remove('append-animation');
 
           nextElementIndex++;
           appendContent();

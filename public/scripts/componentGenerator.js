@@ -1,6 +1,7 @@
 const ChoiceComponentGenerator = (identifier, text) => {
   const button = document.createElement('button');
   button.className = 'choice-button';
+  button.disabled = true;
 
   const choiceIdentifier = document.createElement('div');
   choiceIdentifier.className = 'choice-identifier';
@@ -13,6 +14,7 @@ const ChoiceComponentGenerator = (identifier, text) => {
   button.appendChild(choiceIdentifier);
   button.appendChild(choiceText);
 
+  // When user clicks the choice button, this function toggles "selective" class.
   button.addEventListener('click', function () {
     if (button.classList.contains('selected')) {
       button.classList.remove('selected');
@@ -45,6 +47,7 @@ const QuestionComponentGenerator = ({ question, choices }) => {
 
   container.appendChild(choiceContainer);
 
+  // When user clicks the choice button, this function handles current selected choice.
   choiceContainer.addEventListener('click', function (event) {
     if (event.target.closest('.choice-button')) {
       const clickedButton = event.target.closest('.choice-button');
@@ -57,8 +60,30 @@ const QuestionComponentGenerator = ({ question, choices }) => {
     }
   });
 
-  // Setup MutationObserver to detect when the element is added to the DOM
-  // TODO
+  // Setup MutationObserver to detect when the element is added to the DOM and visible (if opacity property is not exists in style)
+  const observer = new MutationObserver((mutationsList, observer) => {
+    const choiceButtons = container.querySelectorAll('.choice-button');
+
+    const allHaveOpacity = Array.from(choiceButtons).every(
+      (button) => button.style.opacity === ''
+    );
+
+    if (allHaveOpacity) {
+      console.log('All elements are visible and inserted');
+
+      setTimeout(() => enableButtonsAfter10Second(choiceButtons), 10 * 1000);
+
+      setTimeout(forceNextQuestionAfter30Second, 30 * 1000);
+
+      observer.disconnect();
+    }
+  });
+
+  observer.observe(choiceContainer, {
+    childList: true,
+    subtree: true,
+    attributes: true
+  });
 
   return container;
 };
