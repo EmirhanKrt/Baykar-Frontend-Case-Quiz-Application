@@ -140,11 +140,11 @@ const StepComponentGenerator = () => {
     step.className = 'step';
 
     if (index < currentQuestionIndex) {
-      step.style.backgroundColor = 'var(--correct-answer-background-color)';
+      step.style.backgroundColor = 'var(--primary-color)';
     }
 
     if (index === currentQuestionIndex) {
-      step.style.backgroundColor = 'var(--primary-color)';
+      step.style.backgroundColor = 'var(--progressbar-color)';
     }
 
     container.appendChild(step);
