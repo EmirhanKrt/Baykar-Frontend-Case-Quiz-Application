@@ -1,21 +1,88 @@
+const QUIZ_HISTORY = {};
+
+let currentQuizId = '';
 let currentQuestionIndex = 0;
 
-/* Question Object Structure
+/* Choice Object Structure
   {
-    id: 1
-    question: 'mock question content',
-    choices: [
-      { identifier: 'A', text: 'Choice A' },
-      { identifier: 'B', text: 'Choice B' },
-      { identifier: 'C', text: 'Choice C' },
-      { identifier: 'D', text: 'Choice D' }
-    ]
+    id: 1,
+    identifier: 'A',
+    text: 'Choice A'
   }; 
 */
 
-const QUESTIONS = [];
+const generateChoiceObject = ({ identifier, text }) => {
+  const choiceId = crypto.randomUUID();
 
-const updatTimereProgressBar = (remeaningTime) => {
+  return {
+    id: choiceId,
+    identifier,
+    text
+  };
+};
+
+/* Answer Object Structure
+  {
+    id: 1,
+    choiceId: 1
+  }; 
+*/
+
+const generateAnswerObject = ({ choiceId }) => {
+  const answerId = crypto.randomUUID();
+
+  return {
+    id: answerId,
+    choiceId
+  };
+};
+
+/* Question Object Structure
+  {
+    id: 1,
+    question: 'mock question content',
+    choices: Choice[],
+    answer: Answer | null // initially null
+  }; 
+*/
+
+const generateQuestionObject = ({ body, title }) => {
+  const questionId = crypto.randomUUID();
+
+  const [A, B, C, ...D] = body.split(' ');
+
+  return {
+    id: questionId,
+    question: title,
+    choices: [
+      { identifier: 'A', text: A },
+      { identifier: 'B', text: B },
+      { identifier: 'C', text: C },
+      { identifier: 'D', text: D.join(' ') }
+    ].map(generateChoiceObject),
+    answer: null
+  };
+};
+
+/* Quiz Object Structure
+  {
+    id: 1,
+    title: 'mock quiz title',
+    questions: Question[]
+  }; 
+*/
+
+const generateQuizObject = () => {
+  const quizId = crypto.randomUUID();
+
+  return {
+    id: quizId,
+    title: `Quiz - ${quizId}`,
+    questions: []
+  };
+};
+
+const updatTimerProgressBar = (remeaningTime) => {
   const progressBar = document.getElementById(
     'question-title-timer-progressbar'
   );
@@ -28,13 +95,8 @@ const updatTimereProgressBar = (remeaningTime) => {
 const enableChoices = () => {
   console.log('10 seconds have passed. Enabling the choices and next button');
 
-  const choices = document.querySelectorAll(
-    'div.question-choice-container > button.choice-button'
-  );
-
-  Array.from(choices).forEach(
-    (choiceButton) => (choiceButton.disabled = false)
-  );
+  const choices = getChoiceButtons();
+  choices.forEach((choiceButton) => (choiceButton.disabled = false));
 
   const nextButton = document.querySelector('div.question-container + button');
   nextButton.disabled = false;
@@ -42,47 +104,29 @@ const enableChoices = () => {
   return true;
 };
 
-const forceNextQuestion = () => {
-  console.log('30 seconds have passed. Forcing next question ');
-
-  nextQuestion();
-};
-
 const startQuiz = async () => {
   try {
+    const Quiz = generateQuizObject();
+    QUIZ_HISTORY[Quiz.id] = Quiz;
+
+    currentQuizId = Quiz.id;
+
     const questionSource = await fetch(API_URL).then((response) =>
       response.json()
     );
 
-    const randomIndexes = [];
-
+    // Random question generation with random index logic
     for (let index = 0; index < QUESTION_COUNT; index++) {
       let randomIndex = generateRandomNumber();
+      let question = questionSource[randomIndex];
 
-      while (isNaN(randomIndex) || !questionSource[randomIndex]) {
+      while (isNaN(randomIndex) || !question) {
         randomIndex = generateRandomNumber();
+        question = questionSource[randomIndex];
       }
 
-      randomIndexes.push(randomIndex);
+      Quiz.questions.push(generateQuestionObject(question));
     }
-
-    randomIndexes.forEach((randomIndex) => {
-      const question = questionSource[randomIndex];
-      if (!question) return;
-
-      const [A, B, C, ...D] = question.body.split(' ');
-
-      QUESTIONS.push({
-        id: question.id,
-        question: question.title,
-        choices: [
-          { identifier: 'A', text: A },
-          { identifier: 'B', text: B },
-          { identifier: 'C', text: C },
-          { identifier: 'D', text: D.join(' ') }
-        ]
-      });
-    });
 
     await questionPageHandler();
 
@@ -93,12 +137,23 @@ const startQuiz = async () => {
 };
 
 const questionPageHandler = async () => {
-  if (currentQuestionIndex === QUESTION_COUNT) {
+  stopTimer();
+
+  if (currentQuestionIndex >= QUESTION_COUNT) {
+    console.log('quiz finished');
+
+    updateHeaderTitle('QUIZ APPLICATION');
+
     // todo; render result page
+
+    currentQuizId = '';
+    currentQuestionIndex = 0;
     return;
   }
 
-  stopTimer();
+  if (currentQuestionIndex === 0) {
+    updateHeaderTitle(QUIZ_HISTORY[currentQuizId].title);
+  }
 
   await removePageContentAnimationHandler();
 
@@ -108,7 +163,7 @@ const questionPageHandler = async () => {
   await insertPageContentAnimationHandler(titleComponent);
 
   const questionComponent = QuestionComponentGenerator(
-    QUESTIONS[currentQuestionIndex]
+    QUIZ_HISTORY[currentQuizId].questions[currentQuestionIndex]
   );
   await insertPageContentAnimationHandler(questionComponent);
 
@@ -118,10 +173,17 @@ const questionPageHandler = async () => {
   console.log('insert completed');
 };
 
-const generateRandomNumber = () => Math.floor(Math.random() * 99);
-
 const nextQuestion = () => {
   console.log('next question');
+
+  const selectedChoice = getChoiceButtons().find((choice) =>
+    choice.classList.contains('selected')
+  );
+
+  if (selectedChoice) {
+    QUIZ_HISTORY[currentQuizId].questions[currentQuestionIndex].answer =
+      generateAnswerObject({ choiceId: selectedChoice.id });
+  }
 
   currentQuestionIndex++;
 

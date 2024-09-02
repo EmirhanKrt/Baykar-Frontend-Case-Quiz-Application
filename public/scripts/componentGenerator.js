@@ -19,8 +19,9 @@ const QuestionPageTitleComponentGenerator = () => {
   return containerDiv;
 };
 
-const ChoiceComponentGenerator = (identifier, text) => {
+const ChoiceComponentGenerator = ({ id, identifier, text }) => {
   const button = document.createElement('button');
+  button.id = id;
   button.className = 'choice-button';
   button.disabled = true;
 
@@ -47,8 +48,9 @@ const ChoiceComponentGenerator = (identifier, text) => {
   return button;
 };
 
-const QuestionComponentGenerator = ({ question, choices }) => {
+const QuestionComponentGenerator = ({ id, question, choices }) => {
   const container = document.createElement('div');
+  container.id = id;
   container.className = 'question-container';
 
   const questionContent = document.createElement('div');
@@ -61,7 +63,7 @@ const QuestionComponentGenerator = ({ question, choices }) => {
 
   const choiceButtons = [];
   choices.forEach((choice) => {
-    const button = ChoiceComponentGenerator(choice.identifier, choice.text);
+    const button = ChoiceComponentGenerator(choice);
     choiceContainer.appendChild(button);
     choiceButtons.push(button);
   });
@@ -112,7 +114,7 @@ const NextButtonComponentGenerator = () => {
   let buttonIcon =
     '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>';
 
-  if (currentQuestionIndex >= QUESTIONS.length - 1) {
+  if (currentQuestionIndex >= QUESTION_COUNT - 1) {
     buttonText = 'Finish';
     buttonIcon = null;
   }

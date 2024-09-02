@@ -3,7 +3,7 @@ const timerWorker = new Worker('/public/scripts/workers/timerWorker.js');
 timerWorker.onmessage = (event) => {
   switch (event.data.type) {
     case TIMER_WORKER_SIGNALS['Time Update']:
-      updatTimereProgressBar(event.data.currentQuestionRemainingTime);
+      updatTimerProgressBar(event.data.currentQuestionRemainingTime);
       break;
 
     case TIMER_WORKER_SIGNALS['Enable Choices Duration']:
@@ -11,7 +11,7 @@ timerWorker.onmessage = (event) => {
       break;
 
     case TIMER_WORKER_SIGNALS['Force New Question Duration']:
-      forceNextQuestion();
+      nextQuestion();
       break;
 
     default:
