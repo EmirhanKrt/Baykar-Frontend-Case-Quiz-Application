@@ -5,11 +5,11 @@ let currentQuestionIndex = 0;
 
 /* Choice Object Structure
   {
-    id: 1,
-    identifier: 'A',
-    text: 'Choice A',
-    status: "correct" | "wrong" | "unknown"
-  }; 
+    id: uuid,
+    identifier: 'A' | 'B' | 'C' | 'D',
+    text: string,
+    status: "correct" | "wrong" | "unknown" // initially "unknown"
+  };
 */
 
 const generateChoiceObject = ({ identifier, text }) => {
@@ -25,9 +25,9 @@ const generateChoiceObject = ({ identifier, text }) => {
 
 /* Answer Object Structure
   {
-    id: 1,
-    choiceId: 1,
-    status: "correct" | "wrong" | "unknown"
+    id: uuid,
+    choiceId: uuid,
+    status: "correct" | "wrong" | "unknown" // initially "unknown"
   }; 
 */
 
@@ -43,12 +43,12 @@ const generateAnswerObject = ({ choiceId }) => {
 
 /* Question Object Structure
   {
-    id: 1,
-    question: 'mock question content',
+    id: uuid,
+    question: string,
     choices: Choice[],
     answer: Answer | null // initially null,
-    status: "correct" | "wrong" | "unknown"
-  }; 
+    status: "correct" | "wrong" | "unknown" // initially "unknown"
+  };
 */
 
 const generateQuestionObject = ({ body, title }) => {
@@ -72,13 +72,13 @@ const generateQuestionObject = ({ body, title }) => {
 
 /* Quiz Object Structure
   {
-    id: 1,
-    title: 'mock quiz title',
+    id: uuid,
+    title: string,
     questions: Question[],
-    result: number | null,
-    correctAnswerCount: number | null,
-    emptyAnswerCount: number | null,
-    wrongAnswerCount: number | null
+    result: number | null, // initially null
+    correctAnswerCount: number | null, // initially null
+    emptyAnswerCount: number | null, // initially null
+    wrongAnswerCount: number | null // initially null
   }; 
 */
 
