@@ -483,6 +483,12 @@ div#main-screen .start-button-container button {
   overflow-y: scroll;
 }
 
+#history-container > div {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .history-quiz-result-container {
   display: flex;
   justify-content: space-between;

@@ -1,4 +1,4 @@
-const QUIZ_HISTORY = {};
+const QUIZ_HISTORY = [];
 
 let currentQuizId = '';
 let currentQuestionIndex = 0;
@@ -124,7 +124,7 @@ const startQuiz = async (event) => {
 
   try {
     const Quiz = generateQuizObject();
-    QUIZ_HISTORY[Quiz.id] = Quiz;
+    QUIZ_HISTORY.push(Quiz);
 
     currentQuizId = Quiz.id;
 
@@ -154,7 +154,7 @@ const startQuiz = async (event) => {
 };
 
 const stopQuiz = async () => {
-  const Quiz = QUIZ_HISTORY[currentQuizId];
+  const Quiz = getCurrentQuiz();
 
   // Assuming fetching { questionId : corretChoiceId } key - pair object with using HTTP GET method.
   const questionCorrectChoiseMapped = {};
@@ -213,14 +213,14 @@ const stopQuiz = async () => {
     (Quiz.correctAnswerCount / Quiz.questions.length) * 100
   );
 
+  console.log(QUIZ_HISTORY);
+
+  setLocalStorageQuizHistory();
+
   mainPageHandler();
 };
 
 const mainPageHandler = async () => {
-  console.log(QUIZ_HISTORY);
-
-  console.log('quiz finished');
-
   updateHeaderTitle('QUIZ APPLICATION');
 
   await removePageContentAnimationHandler();
@@ -247,7 +247,7 @@ const questionPageHandler = async () => {
   }
 
   if (currentQuestionIndex === 0) {
-    updateHeaderTitle(QUIZ_HISTORY[currentQuizId].title);
+    updateHeaderTitle(getCurrentQuiz().title);
   }
 
   await removePageContentAnimationHandler();
@@ -258,7 +258,7 @@ const questionPageHandler = async () => {
   await insertPageContentAnimationHandler(titleComponent);
 
   const questionComponent = QuestionComponentGenerator(
-    QUIZ_HISTORY[currentQuizId].questions[currentQuestionIndex]
+    getCurrentQuiz().questions[currentQuestionIndex]
   );
   await insertPageContentAnimationHandler(questionComponent);
 
@@ -289,7 +289,7 @@ const nextQuestion = (event = null) => {
   );
 
   if (selectedChoice) {
-    QUIZ_HISTORY[currentQuizId].questions[currentQuestionIndex].answer =
+    getCurrentQuiz().questions[currentQuestionIndex].answer =
       generateAnswerObject({ choiceId: selectedChoice.id });
   }
 

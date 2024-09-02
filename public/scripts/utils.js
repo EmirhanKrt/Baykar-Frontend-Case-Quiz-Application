@@ -40,3 +40,11 @@ const closeDrawer = () => {
 
   return drawer;
 };
+
+const getCurrentQuiz = () => {
+  const currentQuiz = QUIZ_HISTORY.find((quiz) => quiz.id === currentQuizId);
+
+  if (!currentQuiz) throw new Error('Current quiz not found');
+
+  return currentQuiz;
+};
