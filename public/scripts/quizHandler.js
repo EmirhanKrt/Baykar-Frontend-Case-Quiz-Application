@@ -170,11 +170,19 @@ const questionPageHandler = async () => {
   const nextButtonComponent = NextButtonComponentGenerator();
   await insertPageContentAnimationHandler(nextButtonComponent);
 
+  const stepComponent = StepComponentGenerator();
+  await insertPageContentAnimationHandler(stepComponent);
+
   console.log('insert completed');
 };
 
 const nextQuestion = () => {
   console.log('next question');
+
+  // Assuming sending POST HTTP request to related API Path.
+  // Also can use wss connection for send answer
+
+  // await fetch(API_URL, { method: "POST", body: JSON.Stringify(AnswerObject)... })
 
   const selectedChoice = getChoiceButtons().find((choice) =>
     choice.classList.contains('selected')

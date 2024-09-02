@@ -440,6 +440,24 @@ div#main-screen .start-button-container button {
   color: var(--button-text-color);
 }
 
+.step-container {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.step {
+  background-color: var(--background-color-2);
+  width: 100%;
+  height: 8px;
+  border-radius: 8px;
+}
+
+#history-container {
+  margin-top: auto;
+  margin-bottom: 1.5rem;
+}
+
 .card {
   background: var(--background-color-3);
   padding: 1rem;

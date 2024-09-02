@@ -130,3 +130,25 @@ const NextButtonComponentGenerator = () => {
 
   return button;
 };
+
+const StepComponentGenerator = () => {
+  const container = document.createElement('div');
+  container.className = 'step-container';
+
+  for (let index = 0; index < QUESTION_COUNT; index++) {
+    const step = document.createElement('div');
+    step.className = 'step';
+
+    if (index < currentQuestionIndex) {
+      step.style.backgroundColor = 'var(--correct-answer-background-color)';
+    }
+
+    if (index === currentQuestionIndex) {
+      step.style.backgroundColor = 'var(--primary-color)';
+    }
+
+    container.appendChild(step);
+  }
+
+  return container;
+};
