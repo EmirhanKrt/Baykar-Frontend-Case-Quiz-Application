@@ -20,14 +20,14 @@ Choice Object Structure
   id: uuid,
   identifier: 'A' | 'B' | 'C' | 'D',
   text: string,
-  status: "correct" | "wrong" | "unknown" // initially unknown
+  status: "correct" | "wrong" | "unknown" // initially "unknown"
 };
 
 Answer Object Structure
 {
   id: uuid,
   choiceId: uuid,
-  status: "correct" | "wrong" | "unknown" // initially unknown
+  status: "correct" | "wrong" | "unknown" // initially "unknown"
 }; 
 
 Question Object Structure
@@ -36,7 +36,7 @@ Question Object Structure
   question: string,
   choices: Choice[],
   answer: Answer | null // initially null,
-  status: "correct" | "wrong" | "unknown" // initially unknown
+  status: "correct" | "wrong" | "unknown" // initially "unknown"
 };
 
 Quiz Object Structure
