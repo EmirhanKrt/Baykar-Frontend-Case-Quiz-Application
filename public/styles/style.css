@@ -508,7 +508,7 @@ div#main-screen .start-button-container button {
 }
 
 .append-animation {
-  animation: fadeIn 0.2s forwards;
+  animation: fadeIn 0.1s forwards;
 }
 
 @keyframes fadeIn {
@@ -518,7 +518,7 @@ div#main-screen .start-button-container button {
 }
 
 .remove-animation {
-  animation: fadeOut 0.2s forwards;
+  animation: fadeOut 0.1s forwards;
 }
 
 @keyframes fadeOut {
