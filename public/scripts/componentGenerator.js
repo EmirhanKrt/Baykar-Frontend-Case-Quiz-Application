@@ -1,30 +1,20 @@
 const QuestionPageTitleComponentGenerator = () => {
   const containerDiv = document.createElement('div');
+  containerDiv.className = 'question-title-container';
 
-  const questionDiv = document.createElement('div');
+  const questionDiv = document.createElement('h2');
   questionDiv.textContent = `Question ${currentQuestionIndex + 1}`;
 
-  const timerDiv = document.createElement('div');
-  timerDiv.id = 'timer';
-  timerDiv.textContent = '30 seconds left';
-
   const progressBarContainer = document.createElement('div');
-  progressBarContainer.style.width = '100%';
-  progressBarContainer.style.height = '10px';
-  progressBarContainer.style.backgroundColor = '#e0e0e0';
-  progressBarContainer.style.marginTop = '10px';
+  progressBarContainer.className = 'question-title-timer-progressbar-container';
 
   const progressBar = document.createElement('div');
-  progressBar.id = 'progress-bar';
-  progressBar.style.width = '0%';
-  progressBar.style.height = '100%';
-  progressBar.style.backgroundColor = '#76c7c0';
+  progressBar.id = 'question-title-timer-progressbar';
 
   progressBarContainer.appendChild(progressBar);
 
-  containerDiv.appendChild(questionDiv);
-  containerDiv.appendChild(timerDiv);
   containerDiv.appendChild(progressBarContainer);
+  containerDiv.appendChild(questionDiv);
 
   return containerDiv;
 };

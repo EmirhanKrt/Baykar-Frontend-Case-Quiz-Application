@@ -15,6 +15,16 @@ let currentQuestionIndex = 0;
 
 const QUESTIONS = [];
 
+const updatTimereProgressBar = (remeaningTime) => {
+  const progressBar = document.getElementById(
+    'question-title-timer-progressbar'
+  );
+  if (!progressBar) return;
+
+  let progress = Math.min(100, (remeaningTime / QUESTION_DURATION) * 100);
+  progressBar.style.width = progress + '%';
+};
+
 const enableChoices = () => {
   console.log('10 seconds have passed. Enabling the choices and next button');
 
@@ -33,7 +43,7 @@ const enableChoices = () => {
 };
 
 const forceNextQuestion = () => {
-  console.log('30 seconds have passed');
+  console.log('30 seconds have passed. Forcing next question ');
 
   nextQuestion();
 };
