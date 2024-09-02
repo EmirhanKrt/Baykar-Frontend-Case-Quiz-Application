@@ -7,6 +7,8 @@
 html[data-theme='light'] {
   --primary-color: rgb(59 130 246);
 
+  --progressbar-color: rgb(249 115 22);
+
   --title-color: #000;
   --text-color: #363636;
 
@@ -30,6 +32,8 @@ html[data-theme='light'] {
 
 html[data-theme='dark'] {
   --primary-color: rgb(147 197 253);
+
+  --progressbar-color: rgb(253 186 116);
 
   --title-color: #ffffff;
   --text-color: #c9c9c9;
@@ -207,6 +211,8 @@ header a {
 
 header h1 {
   all: inherit;
+  text-transform: uppercase;
+  text-align: center;
 }
 
 header a:hover {
@@ -308,12 +314,17 @@ div#main-screen .start-button-container button {
   width: 100%;
   height: 0.5rem;
   background-color: var(--background-color-2);
+
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+
+  overflow: hidden;
 }
 
 #question-title-timer-progressbar {
   width: 0%;
   height: 100%;
-  background-color: var(--primary-color);
+  background-color: var(--progressbar-color);
 }
 
 .question-container {
@@ -413,36 +424,87 @@ div#main-screen .start-button-container button {
   padding: 1rem;
 }
 
-.choice-button:not(:disabled).correct {
+.choice-button.correct {
   border-color: var(--correct-answer-background-color);
 }
 
-.choice-button:not(:disabled).correct .choice-identifier {
+.choice-button.correct .choice-identifier {
   color: var(--correct-answer-background-color);
 }
 
-.choice-button:not(:disabled).correct .choice-text {
+.choice-button.correct .choice-text {
   background-color: var(--correct-answer-background-color);
   color: var(--button-text-color);
 }
 
-.choice-button:not(:disabled).wrong {
+.choice-button.empty {
+  border-color: var(--progressbar-color);
+}
+
+.choice-button.empty .choice-identifier {
+  color: var(--progressbar-color);
+}
+
+.choice-button.empty .choice-text {
+  background-color: var(--progressbar-color);
+  color: var(--button-text-color);
+}
+
+.choice-button.wrong {
   border-color: var(--wrong-answer-background-color);
 }
 
-.choice-button:not(:disabled).wrong .choice-identifier {
+.choice-button.wrong .choice-identifier {
   color: var(--wrong-answer-background-color);
 }
 
-.choice-button:not(:disabled).wrong .choice-text {
+.choice-button.wrong .choice-text {
   background-color: var(--wrong-answer-background-color);
   color: var(--button-text-color);
+}
+
+.step-container {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.step {
+  background-color: var(--background-color-2);
+  width: 100%;
+  height: 8px;
+  border-radius: 8px;
+}
+
+#history-container {
+  margin-top: auto;
+  margin-bottom: 1.5rem;
+
+  overflow-y: scroll;
+}
+
+#history-container > div {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.history-quiz-result-container {
+  display: flex;
+  justify-content: space-between;
+  text-transform: uppercase;
 }
 
 .card {
   background: var(--background-color-3);
   padding: 1rem;
   border-radius: 20px;
+  transition: 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.card:hover {
+  background-color: var(--background-color-4);
 }
 
 .append-animation {
@@ -463,4 +525,151 @@ div#main-screen .start-button-container button {
   to {
     opacity: 0;
   }
+}
+
+.overlay-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -10;
+}
+
+.overlay-open {
+  opacity: 1;
+  visibility: visible;
+  z-index: 10;
+}
+
+.drawer {
+  top: 0;
+  right: 0;
+  flex: 1 0 auto;
+  height: 100%;
+  display: flex;
+  outline: 0;
+  z-index: 1200;
+  position: fixed;
+  overflow-y: auto;
+  flex-direction: column;
+  padding: 1rem;
+
+  background-color: var(--background-color);
+  width: 100%;
+  flex-shrink: 0;
+  gap: 1rem;
+
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+}
+
+.drawer-hidden {
+  visibility: hidden;
+  width: 240px;
+  transform: translateX(240px);
+  flex-shrink: 0;
+  transition: 325ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+}
+
+.drawer-animate {
+  visibility: visible;
+  transform: none;
+  box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.2),
+    0px 16px 24px 2px rgba(0, 0, 0, 0.14), 0px 6px 30px 5px rgba(0, 0, 0, 0.12);
+}
+
+.drawer .history-quiz-result-container button {
+  background-color: transparent;
+  color: var(--title-color);
+  border: none;
+  padding: 0 0.25rem;
+}
+
+.drawer .history-quiz-result-container button:hover {
+  background-color: var(--background-color-4);
+}
+
+.drawer .history-quiz-drawer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  overflow-y: scroll;
+  flex: 1;
+}
+
+.drawer .history-quiz-drawer .history-question-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: scroll;
+}
+
+.drawer .history-quiz-drawer .history-question-container .question-container {
+  gap: 0.5rem;
+}
+
+.drawer
+  .history-quiz-drawer
+  .history-question-container
+  .question-container
+  .question-choice-container {
+  gap: 0.25rem;
+}
+
+.drawer
+  .history-quiz-drawer
+  .history-question-container
+  .question-container
+  .question-choice-container
+  .choice-button
+  .choice-identifier {
+  font-size: 20px;
+  min-height: 36px;
+}
+
+.drawer
+  .history-quiz-drawer
+  .history-question-container
+  .question-container
+  .question-choice-container
+  .choice-button
+  .choice-text {
+  padding: 0.5rem;
+  min-height: 36px;
+}
+
+.drawer
+  .choice-button:not(.correct):not(.wrong):not(.empty):disabled
+  .choice-text {
+  background-color: var(--background-color);
+}
+
+.history-quiz-question-navigation-container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: auto;
+}
+
+.history-quiz-question-navigation-container .navigation-item {
+  padding: 1rem;
+  font-weight: 600;
+  color: var(--button-text-color);
+  cursor: pointer;
+}
+
+.history-quiz-question-navigation-container .navigation-item.correct {
+  background-color: var(--correct-answer-background-color);
+}
+
+.history-quiz-question-navigation-container .navigation-item.wrong {
+  background-color: var(--wrong-answer-background-color);
+}
+
+.history-quiz-question-navigation-container .navigation-item.empty {
+  background-color: var(--progressbar-color);
 }
