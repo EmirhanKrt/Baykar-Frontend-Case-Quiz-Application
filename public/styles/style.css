@@ -156,6 +156,11 @@ button:not(:disabled):hover {
   opacity: 0.8;
 }
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 ol {
   display: flex;
   flex-direction: column;
@@ -325,10 +330,6 @@ div#main-screen .start-button-container button {
   overflow: hidden;
 }
 
-.choice-button:disabled {
-  cursor: not-allowed;
-}
-
 .choice-button:disabled .choice-identifier,
 .choice-button:disabled .choice-text {
   background-color: var(--background-color-2);
@@ -350,7 +351,7 @@ div#main-screen .start-button-container button {
 
   width: 3rem;
   min-height: 52px;
-  height: auto;
+  height: 100%;
 
   color: var(--title-color);
 
@@ -416,7 +417,7 @@ div#main-screen .start-button-container button {
 }
 
 .append-animation {
-  animation: fadeIn 0.5s forwards;
+  animation: fadeIn 0.2s forwards;
 }
 
 @keyframes fadeIn {
@@ -426,7 +427,7 @@ div#main-screen .start-button-container button {
 }
 
 .remove-animation {
-  animation: fadeOut 0.5s forwards;
+  animation: fadeOut 0.2s forwards;
 }
 
 @keyframes fadeOut {

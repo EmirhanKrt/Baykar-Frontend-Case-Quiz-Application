@@ -1,3 +1,34 @@
+const QuestionPageTitleComponentGenerator = () => {
+  const containerDiv = document.createElement('div');
+
+  const questionDiv = document.createElement('div');
+  questionDiv.textContent = `Question ${currentQuestionIndex + 1}`;
+
+  const timerDiv = document.createElement('div');
+  timerDiv.id = 'timer';
+  timerDiv.textContent = '30 seconds left';
+
+  const progressBarContainer = document.createElement('div');
+  progressBarContainer.style.width = '100%';
+  progressBarContainer.style.height = '10px';
+  progressBarContainer.style.backgroundColor = '#e0e0e0';
+  progressBarContainer.style.marginTop = '10px';
+
+  const progressBar = document.createElement('div');
+  progressBar.id = 'progress-bar';
+  progressBar.style.width = '0%';
+  progressBar.style.height = '100%';
+  progressBar.style.backgroundColor = '#76c7c0';
+
+  progressBarContainer.appendChild(progressBar);
+
+  containerDiv.appendChild(questionDiv);
+  containerDiv.appendChild(timerDiv);
+  containerDiv.appendChild(progressBarContainer);
+
+  return containerDiv;
+};
+
 const ChoiceComponentGenerator = (identifier, text) => {
   const button = document.createElement('button');
   button.className = 'choice-button';
@@ -69,11 +100,9 @@ const QuestionComponentGenerator = ({ question, choices }) => {
     );
 
     if (allHaveOpacity) {
-      console.log('All elements are visible and inserted');
+      console.log('All elements are visible and inserted. Starting timer');
 
-      setTimeout(() => enableButtonsAfter10Second(choiceButtons), 10 * 1000);
-
-      setTimeout(forceNextQuestionAfter30Second, 30 * 1000);
+      startTimer();
 
       observer.disconnect();
     }
@@ -86,4 +115,26 @@ const QuestionComponentGenerator = ({ question, choices }) => {
   });
 
   return container;
+};
+
+const NextButtonComponentGenerator = () => {
+  let buttonText = 'Next';
+  let buttonIcon =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>';
+
+  if (currentQuestionIndex >= QUESTIONS.length - 1) {
+    buttonText = 'Finish';
+    buttonIcon = null;
+  }
+
+  const container = document.createElement('div');
+
+  const button = document.createElement('button');
+  button.innerHTML = `${buttonText} ${buttonIcon ? buttonIcon : ''}`.trim();
+  button.disabled = true;
+  button.onclick = nextQuestion;
+
+  container.appendChild(button);
+
+  return button;
 };

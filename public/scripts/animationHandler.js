@@ -1,18 +1,35 @@
 const removePageContentAnimationHandler = () => {
   return new Promise((resolve, reject) => {
-    const children = document.querySelector('.app-container').children;
-    if (!children) {
-      return reject(new Error('No children found'));
+    const appContainer = document.querySelector('.app-container');
+    if (!appContainer) {
+      return reject(new Error('No app container found'));
     }
 
-    let previusElementIndex = children.length - 1;
+    const willBeAnimatedChildList = [];
+
+    const setWillBeAnimatedChildList = (component) => {
+      for (const childElement of component.children) {
+        willBeAnimatedChildList.push(childElement);
+
+        if (
+          childElement.classList.contains('question-container') ||
+          childElement.classList.contains('question-choice-container')
+        ) {
+          setWillBeAnimatedChildList(childElement);
+        }
+      }
+    };
+
+    setWillBeAnimatedChildList(appContainer);
+
+    let previusElementIndex = willBeAnimatedChildList.length - 1;
 
     const removeContent = () => {
       if (previusElementIndex < 0) {
         return resolve();
       }
 
-      const element = children[previusElementIndex];
+      const element = willBeAnimatedChildList[previusElementIndex];
       if (!element) {
         return reject(new Error('Element not found'));
       }
