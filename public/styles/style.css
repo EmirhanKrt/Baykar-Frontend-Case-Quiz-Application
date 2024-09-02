@@ -74,7 +74,6 @@ main {
 
   padding: 1rem;
   margin: auto;
-  gap: 1.5rem;
 }
 
 @media (max-width: 39.9rem) {
@@ -152,8 +151,13 @@ button {
   transition: 0.3s ease-in-out;
 }
 
-button:hover {
+button:not(:disabled):hover {
   opacity: 0.8;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
 ol {
@@ -282,8 +286,60 @@ footer div#footer-theme-container span.active {
   gap: 1ch;
 }
 
+div#guide-container {
+  margin-top: 1.5rem;
+}
+
 div#main-screen .start-button-container button {
   margin: auto;
+}
+
+.question-title-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.question-title-container h2 {
+  text-align: center;
+}
+
+.question-title-timer-progressbar-container {
+  width: 100%;
+  height: 0.5rem;
+  background-color: var(--background-color-2);
+}
+
+#question-title-timer-progressbar {
+  width: 0%;
+  height: 100%;
+  background-color: var(--primary-color);
+}
+
+.question-container {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2rem;
+}
+
+.question-container + button {
+  margin-left: auto;
+}
+
+.question-content {
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 28px;
+
+  color: var(--title-color);
+}
+
+.question-choice-container {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1rem;
 }
 
 .choice-button {
@@ -295,18 +351,25 @@ div#main-screen .start-button-container button {
   gap: 0;
   padding: 0;
 
+  border-radius: 0;
+
   border-color: var(--background-color-2);
   background-color: var(--background-color-2);
 
   overflow: hidden;
 }
 
-.choice-button:hover {
+.choice-button:disabled .choice-identifier,
+.choice-button:disabled .choice-text {
+  background-color: var(--background-color-2);
+}
+
+.choice-button:not(:disabled):hover {
   opacity: 1;
 }
 
-.choice-button.selected,
-.choice-button:not(.correct):not(.wrong):hover {
+.choice-button:not(:disabled).selected,
+.choice-button:not(:disabled):not(.correct):not(.wrong):hover {
   border-color: var(--primary-color);
 }
 
@@ -316,6 +379,7 @@ div#main-screen .start-button-container button {
   justify-content: center;
 
   width: 3rem;
+  min-height: 52px;
   height: 100%;
 
   color: var(--title-color);
@@ -328,8 +392,9 @@ div#main-screen .start-button-container button {
   transition: 0.3s ease-in-out;
 }
 
-.choice-button.selected .choice-identifier,
-.choice-button:not(.correct):not(.wrong):hover .choice-identifier {
+.choice-button:not(:disabled).selected .choice-identifier,
+.choice-button:not(:disabled):not(.correct):not(.wrong):hover
+  .choice-identifier {
   color: var(--primary-color);
   background-color: var(--background-color-5);
 }
@@ -348,28 +413,28 @@ div#main-screen .start-button-container button {
   padding: 1rem;
 }
 
-.choice-button.correct {
+.choice-button:not(:disabled).correct {
   border-color: var(--correct-answer-background-color);
 }
 
-.choice-button.correct .choice-identifier {
+.choice-button:not(:disabled).correct .choice-identifier {
   color: var(--correct-answer-background-color);
 }
 
-.choice-button.correct .choice-text {
+.choice-button:not(:disabled).correct .choice-text {
   background-color: var(--correct-answer-background-color);
   color: var(--button-text-color);
 }
 
-.choice-button.wrong {
+.choice-button:not(:disabled).wrong {
   border-color: var(--wrong-answer-background-color);
 }
 
-.choice-button.wrong .choice-identifier {
+.choice-button:not(:disabled).wrong .choice-identifier {
   color: var(--wrong-answer-background-color);
 }
 
-.choice-button.wrong .choice-text {
+.choice-button:not(:disabled).wrong .choice-text {
   background-color: var(--wrong-answer-background-color);
   color: var(--button-text-color);
 }
@@ -378,4 +443,24 @@ div#main-screen .start-button-container button {
   background: var(--background-color-3);
   padding: 1rem;
   border-radius: 20px;
+}
+
+.append-animation {
+  animation: fadeIn 0.2s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.remove-animation {
+  animation: fadeOut 0.2s forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
 }
