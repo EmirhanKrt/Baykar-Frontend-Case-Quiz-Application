@@ -7,7 +7,8 @@ let currentQuestionIndex = 0;
   {
     id: 1,
     identifier: 'A',
-    text: 'Choice A'
+    text: 'Choice A',
+    status: "correct" | "wrong" | "unknown"
   }; 
 */
 
@@ -17,14 +18,16 @@ const generateChoiceObject = ({ identifier, text }) => {
   return {
     id: choiceId,
     identifier,
-    text
+    text,
+    status: CHOICE_STATUS.UNKNOWN
   };
 };
 
 /* Answer Object Structure
   {
     id: 1,
-    choiceId: 1
+    choiceId: 1,
+    status: "correct" | "wrong" | "unknown"
   }; 
 */
 
@@ -33,7 +36,8 @@ const generateAnswerObject = ({ choiceId }) => {
 
   return {
     id: answerId,
-    choiceId
+    choiceId,
+    status: CHOICE_STATUS.UNKNOWN
   };
 };
 
@@ -42,7 +46,8 @@ const generateAnswerObject = ({ choiceId }) => {
     id: 1,
     question: 'mock question content',
     choices: Choice[],
-    answer: Answer | null // initially null
+    answer: Answer | null // initially null,
+    status: "correct" | "wrong" | "unknown"
   }; 
 */
 
@@ -60,7 +65,8 @@ const generateQuestionObject = ({ body, title }) => {
       { identifier: 'C', text: C },
       { identifier: 'D', text: D.join(' ') }
     ].map(generateChoiceObject),
-    answer: null
+    answer: null,
+    status: QUESTION_STATUS.UNKNOWN
   };
 };
 
@@ -68,7 +74,11 @@ const generateQuestionObject = ({ body, title }) => {
   {
     id: 1,
     title: 'mock quiz title',
-    questions: Question[]
+    questions: Question[],
+    result: number | null,
+    correctAnswerCount: number | null,
+    emptyAnswerCount: number | null,
+    wrongAnswerCount: number | null
   }; 
 */
 
@@ -78,7 +88,11 @@ const generateQuizObject = () => {
   return {
     id: quizId,
     title: `Quiz - ${quizId}`,
-    questions: []
+    questions: [],
+    result: null,
+    correctAnswerCount: null,
+    emptyAnswerCount: null,
+    wrongAnswerCount: null
   };
 };
 
@@ -104,7 +118,10 @@ const enableChoices = () => {
   return true;
 };
 
-const startQuiz = async () => {
+const startQuiz = async (event) => {
+  // Prevent bug when clicks multiple times
+  event.target.disabled = true;
+
   try {
     const Quiz = generateQuizObject();
     QUIZ_HISTORY[Quiz.id] = Quiz;
@@ -117,11 +134,11 @@ const startQuiz = async () => {
 
     // Random question generation with random index logic
     for (let index = 0; index < QUESTION_COUNT; index++) {
-      let randomIndex = generateRandomNumber();
+      let randomIndex = generateRandomNumber(0, 99);
       let question = questionSource[randomIndex];
 
       while (isNaN(randomIndex) || !question) {
-        randomIndex = generateRandomNumber();
+        randomIndex = generateRandomNumber(0, 99);
         question = questionSource[randomIndex];
       }
 
@@ -136,18 +153,96 @@ const startQuiz = async () => {
   }
 };
 
+const stopQuiz = async () => {
+  const Quiz = QUIZ_HISTORY[currentQuizId];
+
+  // Assuming fetching { questionId : corretChoiceId } key - pair object with using HTTP GET method.
+  const questionCorrectChoiseMapped = {};
+
+  for (let index = 0; index < Quiz.questions.length; index++) {
+    const question = Quiz.questions[index];
+
+    // Mock random choice generation
+    let randomCorrectChoiceIndex = generateRandomNumber(0, 3);
+
+    // Setting choices which are not selected as wrong
+    question.choices
+      .filter((q, i) => i !== randomCorrectChoiceIndex)
+      .forEach((q) => (q.status = CHOICE_STATUS.WRONG));
+
+    question.choices[randomCorrectChoiceIndex].status = CHOICE_STATUS.CORRECT;
+
+    // Setting choices which is selected as correct
+    questionCorrectChoiseMapped[question.id] =
+      question.choices[randomCorrectChoiceIndex].id;
+
+    if (question.answer) {
+      if (
+        question.answer.choiceId ===
+        question.choices[randomCorrectChoiceIndex].id
+      ) {
+        question.answer.status = ANSWER_STATUS.CORRECT;
+        question.status = QUESTION_STATUS.CORRECT;
+      } else {
+        question.answer.status = ANSWER_STATUS.WRONG;
+        question.status = QUESTION_STATUS.WRONG;
+      }
+    } else {
+      question.status = QUESTION_STATUS.WRONG;
+    }
+  }
+
+  let correctAnswerCount = 0;
+  let emptyAnswerCount = 0;
+  let wrongAnswerCount = 0;
+
+  Quiz.questions.forEach((question) => {
+    if (!question.answer) {
+      emptyAnswerCount++;
+    } else if (question.status === QUESTION_STATUS.WRONG) {
+      wrongAnswerCount++;
+    } else if (question.status === QUESTION_STATUS.CORRECT) {
+      correctAnswerCount++;
+    }
+  });
+
+  Quiz.correctAnswerCount = correctAnswerCount;
+  Quiz.emptyAnswerCount = emptyAnswerCount;
+  Quiz.wrongAnswerCount = wrongAnswerCount;
+  Quiz.result = Math.round(
+    (Quiz.correctAnswerCount / Quiz.questions.length) * 100
+  );
+
+  mainPageHandler();
+};
+
+const mainPageHandler = async () => {
+  console.log(QUIZ_HISTORY);
+
+  console.log('quiz finished');
+
+  updateHeaderTitle('QUIZ APPLICATION');
+
+  await removePageContentAnimationHandler();
+
+  const guideComponent = GuideComponentGenerator();
+  await insertPageContentAnimationHandler(guideComponent);
+
+  const startButtonComponent = StartButtonComponentGenerator();
+  await insertPageContentAnimationHandler(startButtonComponent);
+
+  const historyComponent = HistoryComponentGenerator();
+  await insertPageContentAnimationHandler(historyComponent);
+
+  currentQuizId = '';
+  currentQuestionIndex = 0;
+};
+
 const questionPageHandler = async () => {
   stopTimer();
 
   if (currentQuestionIndex >= QUESTION_COUNT) {
-    console.log('quiz finished');
-
-    updateHeaderTitle('QUIZ APPLICATION');
-
-    // todo; render result page
-
-    currentQuizId = '';
-    currentQuestionIndex = 0;
+    stopQuiz();
     return;
   }
 
@@ -176,7 +271,12 @@ const questionPageHandler = async () => {
   console.log('insert completed');
 };
 
-const nextQuestion = () => {
+const nextQuestion = (event = null) => {
+  // Prevent bug when clicks multiple times
+  if (event && event.target && event.target.closest('button')) {
+    event.target.closest('button').disabled = true;
+  }
+
   console.log('next question');
 
   // Assuming sending POST HTTP request to related API Path.
